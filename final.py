@@ -183,8 +183,10 @@ class Perceptron():
                 weights_list[i]=weights_list[i]+features[i]
 def train_perceptron(data_set, train_amount=450):
     if data_set=='digits':
-        images = Read.read_digits("digitdata/trainingimages")
-        lables= Read.read_labels("digitdata/traininglabels")
+        # images = Read.read_digits("digitdata/trainingimages")
+        # lables= Read.read_labels("digitdata/traininglabels")
+        images = Read.read_digits("/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/trainingimages")
+        lables= Read.read_labels("/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/traininglabels")
         digit_weights={'0':[], '1':[], '2':[], '3':[], '4':[] , '5':[], '6':[], '7':[], '8':[], '9':[]}
         len_features= len(Features.get_features(images[0]))
         digit_weights = Perceptron.initialize_weights(digit_weights,10,len_features)
@@ -200,8 +202,8 @@ def train_perceptron(data_set, train_amount=450):
             Perceptron.weight_adjustments(digit_weights,prediction,lables[i],features)
         return digit_weights
     else:
-        images = Read.read_faces('facedata/facedatatrain')
-        lables= Read.read_labels('facedata/facedatatrainlabels')
+        images = Read.read_faces('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatrain')
+        lables= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatrainlabels')
         len_features=len(Features.get_face_features(images[0]))
         face_weights=[random.random() for _ in range(len_features)]
         for i in range(train_amount):
@@ -213,8 +215,8 @@ def train_perceptron(data_set, train_amount=450):
         return face_weights
 def test_perceptron(weights_dict,data, testamount):
     if data=='digits':
-        images = Read.read_digits('digitdata/trainingimages')
-        lables= Read.read_labels("digitdata/traininglabels")
+        images = Read.read_digits('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/testimages')
+        lables= Read.read_labels("/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/testlabels")
         correct=0
         function_map={'0':0, '1':0, '2':0, '3':0, '4':0 , '5':0, '6':0, '7':0, '8':0, '9':0}
         for i in range(testamount):
@@ -231,8 +233,8 @@ def test_perceptron(weights_dict,data, testamount):
                 correct+=1
         return correct/testamount
     else:
-        images = Read.read_faces('facedata/facedatatest')
-        lables= Read.read_labels('facedata/facedatatestlabels')
+        images = Read.read_faces('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatest')
+        lables= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatestlabels')
         correct=0
         for i in range(testamount):
             func_val=0
@@ -337,8 +339,8 @@ class Bayes():
         
         return prediction
 def train_bayes_digits(train_amount):
-    images = Read.read_digits('digitdata/trainingimages')
-    lables= Read.read_labels('digitdata/traininglabels')
+    images = Read.read_digits('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/trainingimages')
+    lables= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/traininglabels')
     prior_dict={}
     for i in range(train_amount):
         if lables[i] in prior_dict:
@@ -430,8 +432,8 @@ def train_bayes_digits(train_amount):
     Bayes.clean_changes(zero,one,two,three,four,five,six,seven,eight,nine,prior_dict)
     return prior_dict, train_amount, zero,one,two,three,four,five,six,seven,eight,nine
 def train_bayes_faces(data_set, train_amount):
-    images = Read.read_faces('facedata/facedatatrain')
-    lables= Read.read_labels('facedata/facedatatrainlabels')
+    images = Read.read_faces('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatrain')
+    lables= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatrainlabels')
     prior_dict = {}
     for i in range(train_amount):
         if lables[i] in prior_dict:
@@ -470,8 +472,8 @@ def train_bayes_faces(data_set, train_amount):
     return prior_dict, train_amount, face_training_dict, not_face_training_dict
 
 def test_bayes_digits(prior,n,zero,one,two,three,four,five,six,seven,eight,nine,test_amount):
-    images=Read.read_digits('digitdata/testimages')
-    labels= Read.read_labels('digitdata/testlabels')
+    images=Read.read_digits('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/testimages')
+    labels= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/digitdata/testlabels')
     correct=0
     for j in range(test_amount):
         p_zero=math.log(prior['0']/n)
@@ -505,8 +507,8 @@ def test_bayes_digits(prior,n,zero,one,two,three,four,five,six,seven,eight,nine,
     return correct/test_amount
 
 def test_bayes_faces(prior, n, face_probs, not_face_probs, test_amount):
-    images = Read.read_faces('facedata/facedatatest')
-    lables= Read.read_labels('facedata/facedatatestlabels')
+    images = Read.read_faces('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatest')
+    lables= Read.read_labels('/Users/ziningou/Desktop/21 Fall/2 AI/HW/CS440_FinalProject/data/facedata/facedatatestlabels')
     correct=0
     for j in range(len(lables)):
         p_face=math.log(prior['1']/n)
@@ -534,13 +536,14 @@ data_set=input("what data set would we like to implement this method on (digit o
 
 if method == 'perceptron':
     if data_set== 'digits' or data_set=='digit':
-        train_size=input("how much data would you like to train on? (max 5000)")
+        train_size=int(input("how much data would you like to train on? (max 5000)"))
         if train_size > 5000:
             train_size=5000
         weights=train_perceptron('digits', train_size)
         print('max values to test on is 1000')
-        test_size = input("how many values would you like to test on: ")
+        test_size = int(input("how many values would you like to test on: "))
         percentage=test_perceptron(weights,'digits',int(test_size))
+        print("Correct percentage / Accuracy is: ", percentage)
     else:
         train_size=input("how much data would you like to train on? (max 451)")
         if int(train_size) > 451:
@@ -549,11 +552,11 @@ if method == 'perceptron':
         print("training.....")
         weights=train_perceptron("faces")
         print('max values to test on is 150')
-        test_size = input("how many values would you like to test on: ")
+        test_size = int(input("how many values would you like to test on: "))
         percentage=test_perceptron(weights,'faces',int(test_size))
 
-prior, n, face_probs, not_face_probs=train_bayes_faces('faces', 451)
-percentage = test_bayes_faces(prior,n,face_probs,not_face_probs, 151)
-prior_dict, training_number, zero,one,two,three,four,five,six,seven,eight,nine= train_bayes_digits(4000)
-new_percentage=test_bayes_digits(prior_dict,training_number,zero,one,two,three,four,five,six,seven,eight,nine,1000)
-print('\n','\n',new_percentage)
+# prior, n, face_probs, not_face_probs=train_bayes_faces('faces', 451)
+# percentage = test_bayes_faces(prior,n,face_probs,not_face_probs, 151)
+# prior_dict, training_number, zero,one,two,three,four,five,six,seven,eight,nine= train_bayes_digits(4000)
+# new_percentage=test_bayes_digits(prior_dict,training_number,zero,one,two,three,four,five,six,seven,eight,nine,1000)
+# print('\n','\n',new_percentage)
