@@ -161,7 +161,6 @@ class Features():
                     feat.append(0)
         return feat
 
-
 class Perceptron():
     def initialize_weights(w_map,digits,num_features):
         for i in range(digits):
@@ -213,9 +212,10 @@ def train_perceptron(data_set, train_amount=450):
         return face_weights
 def test_perceptron(weights_dict,data, testamount):
     if data=='digits':
-        images = Read.read_digits('digitdata/trainingimages')
-        lables= Read.read_labels("digitdata/traininglabels")
+        images = Read.read_digits('digitdata/testimages')
+        lables= Read.read_labels("digitdata/testlabels")
         correct=0
+        incorrect=0
         function_map={'0':0, '1':0, '2':0, '3':0, '4':0 , '5':0, '6':0, '7':0, '8':0, '9':0}
         for i in range(testamount):
             features = Features.get_features(images[i])
@@ -229,11 +229,15 @@ def test_perceptron(weights_dict,data, testamount):
             if prediction==lables[i]:
                 print('Correct: ',correct,' Prediction:', prediction, " Actual:", lables[i])
                 correct+=1
+            else:
+                incorrect+=1
+                print('Incorrect: ',incorrect,' Prediction:', prediction, " Actual:", lables[i])
         return correct/testamount
     else:
         images = Read.read_faces('facedata/facedatatest')
         lables= Read.read_labels('facedata/facedatatestlabels')
         correct=0
+        incorrect=0
         for i in range(testamount):
             func_val=0
             prediction='0'
@@ -247,6 +251,9 @@ def test_perceptron(weights_dict,data, testamount):
             if str(prediction) == lables[i]:
                 correct+=1
                 print('Correct: ',correct,' Prediction:', prediction, " Actual:", lables[i])
+            else:
+                incorrect+=1
+                print('Incorrect: ',incorrect,' Prediction:', prediction, " Actual:", lables[i])
         return correct/testamount
 
 class Bayes():
@@ -429,7 +436,7 @@ def train_bayes_digits(train_amount):
                     nine[j][0] +=1
     Bayes.clean_changes(zero,one,two,three,four,five,six,seven,eight,nine,prior_dict)
     return prior_dict, train_amount, zero,one,two,three,four,five,six,seven,eight,nine
-def train_bayes_faces(data_set, train_amount):
+def train_bayes_faces(train_amount):
     images = Read.read_faces('facedata/facedatatrain')
     lables= Read.read_labels('facedata/facedatatrainlabels')
     prior_dict = {}
@@ -527,33 +534,69 @@ def test_bayes_faces(prior, n, face_probs, not_face_probs, test_amount):
             print(prediction,lables[j],'Incorrect', correct,test_amount)
     return correct/test_amount
                
-    
-method=input("what method would we like to do (perceptron, bayes, personal?): ")
-data_set=input("what data set would we like to implement this method on (digit or faces): ")
+class Main():
+
+    method=input("what method would we like to do (perceptron, bayes): ")
+    data_set=input("what data set would we like to implement this method on (digit or faces): ")
 
 
-if method == 'perceptron':
-    if data_set== 'digits' or data_set=='digit':
-        train_size=input("how much data would you like to train on? (max 5000)")
-        if train_size > 5000:
-            train_size=5000
-        weights=train_perceptron('digits', train_size)
-        print('max values to test on is 1000')
-        test_size = input("how many values would you like to test on: ")
-        percentage=test_perceptron(weights,'digits',int(test_size))
-    else:
-        train_size=input("how much data would you like to train on? (max 451)")
-        if int(train_size) > 451:
-            train_size=451
-            print("training size too large, using max")
-        print("training.....")
-        weights=train_perceptron("faces")
-        print('max values to test on is 150')
-        test_size = input("how many values would you like to test on: ")
-        percentage=test_perceptron(weights,'faces',int(test_size))
+    if method == 'perceptron':
+        if data_set== 'digits' or data_set=='digit':
+            train_size=int(input("how much data would you like to train on? (max 5000)"))
+            if train_size > len(Read.read_labels('digitdata/traininglabels')):
+                train_size=len(Read.read_labels('digitdata/traininglabels'))
+            print("Training Weights....")        
+            weights=train_perceptron('digits', int(train_size))
+            print("Training Complete")
+            print('max values to test on is 1000')
+            test_size = int(input("how many values would you like to test on: "))
+            if test_size> len(Read.read_labels('digitdata/testlabels')):
+                test_size=len(Read.read_labels('digitdata/testlabels'))
+                print("Test Size cant be greater than 1000... Setting Test Size to 1000")
+            percentage=test_perceptron(weights,'digits',test_size)
+            print('Accuracy: ',percentage)
+        else:
+            train_size=input("how much data would you like to train on? (max 451)")
+            if int(train_size) > len(Read.read_labels('facedata/facedatatrainlabels')):
+                train_size=len(Read.read_labels('facedata/facedatatrainlabels'))
+                print("training size too large, using max")
+            print("training.....")
+            weights=train_perceptron("faces")
+            print('max values to test on is 150')
+            test_size = int(input("how many values would you like to test on: "))
+            if test_size>len(Read.read_labels('facedata/facedatatestlabels')):
+                print("input greater than max tests available... using max")
+                test_size=len(Read.read_labels('facedata/facedatatestlabels'))
+            percentage=test_perceptron(weights,'faces',int(test_size))
+            print('Accuracy: ',percentage)
+    elif method == 'bayes':
+        if data_set== 'digits' or data_set=='digit':
+            train_size=int(input("how much data would you like to train on? (max 5000)"))
+            if train_size > len(Read.read_labels('digitdata/traininglabels')):
+                train_size=len(Read.read_labels('digitdata/traininglabels'))
+            print("Training Weights....")        
+            prior_dict, train_amount, zero,one,two,three,four,five,six,seven,eight,nine=train_bayes_digits(int(train_size))
+            print("Training Complete")
+            print('max values to test on is 1000')
+            test_size = int(input("how many values would you like to test on: "))
+            if test_size> len(Read.read_labels('digitdata/testlabels')):
+                test_size=len(Read.read_labels('digitdata/testlabels'))
+                print("Test Size cant be greater than 1000... Setting Test Size to 1000")
+            percentage=test_bayes_digits(prior_dict, train_amount, zero,one,two,three,four,five,six,seven,eight,nine, test_size)
+            print('Accuracy: ',percentage)
+        else:
+            train_size=int(input("how much data would you like to train on? (max 451)"))
+            if int(train_size) > len(Read.read_labels('facedata/facedatatrainlabels')):
+                train_size=len(Read.read_labels('facedata/facedatatrainlabels'))
+                print("training size too large, using max")
+            print("training.....")
+            prior, n, face_probs, not_face_probs=train_bayes_faces(train_size)        
+            print('max values to test on is 150')
+            test_size = int(input("how many values would you like to test on: "))
+            if test_size>len(Read.read_labels('facedata/facedatatestlabels')):
+                print("input greater than max tests available... using max")
+                test_size=len(Read.read_labels('facedata/facedatatestlabels'))
+            percentage=test_bayes_faces(prior,n,face_probs,not_face_probs,test_size)
+            print('Accuracy: ',percentage)
 
-prior, n, face_probs, not_face_probs=train_bayes_faces('faces', 451)
-percentage = test_bayes_faces(prior,n,face_probs,not_face_probs, 151)
-prior_dict, training_number, zero,one,two,three,four,five,six,seven,eight,nine= train_bayes_digits(4000)
-new_percentage=test_bayes_digits(prior_dict,training_number,zero,one,two,three,four,five,six,seven,eight,nine,1000)
-print('\n','\n',new_percentage)
+Main()
