@@ -846,7 +846,7 @@ def report_with_train_percent(percent):
     print(format_report('Perception','Faces', perception_face,p_time[1]))
     print(format_report('Perception','Digits', perception_digits,p_time[0]))        
     print(format_report('Naive Bayes','Face', bayes_face,b_time[1]))
-    print(format_report('Naive Bayes','Face', bayes_digits,b_time[0]))
+    print(format_report('Naive Bayes','Digits', bayes_digits,b_time[0]))
     print(format_report('K-Nearest Neighbor','Face', knn_face,k_time[1]))
     print(format_report('K-Nearest Neighbor','Digits', knn_digits,k_time[0])) 
 
