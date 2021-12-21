@@ -1,4 +1,5 @@
-# read line by line and if the line does not contain a '+' then remove it and return an array of strings that represent one image
+# Names: Prerak Patel, Hsinghui Ku, Zining Ou NetID: pbp73, hk795, zo19
+# RUID: 185005168, 203009502, 187007137
 from io import StringIO
 import math
 from os import remove
@@ -841,7 +842,6 @@ def report_with_train_percent(percent):
         knn_digits.append(res_digit)
 
     print(f"{'Algorithm'.ljust(25)}|{'Data Type'.ljust(15)}|   1   |   2   |   3   |   4   |   5   | {'Mean'.ljust(6)}| {'Stdv'.ljust(5)}|Time |")
-    # print('Algorithm                |Data Type      |   1   |   2   |   3   |   4   |   5   | Mean  | Stdv |Time |')
     print('-------------------------+---------------+-------+-------+-------+-------+-------+-------+------+-----+')
     print(format_report('Perception','Faces', perception_face,p_time[1]))
     print(format_report('Perception','Digits', perception_digits,p_time[0]))        
